@@ -2,20 +2,17 @@ import React, { useState } from 'react';
 
 interface iContext {
   number: number,
+  setNumber: any,
   children?: React.ReactNode;
 }
 
 // @TODO try to finish implementing TypeScript with React Context and React Hooks
-interface Props {
 
-}
-
-export const NumberContext = React.createContext<iContext | null>(null);
+export const NumberContext = React.createContext<iContext | undefined>(undefined);
 
 
-const NumbersProvider = (props: { children: object, }) => {
-  const [number, setNumber]: any = useState(0);
-  console.log('hiiii', number);
+const NumbersProvider = (props: { children?: object, }) => {
+  const [number, setNumber]: any = useState(111);
   // const [storedNumber, setStoredNumber] = useState(0);
   // const [enteringNumber, setEnteringNumber] = useState(0);
   // const [operatorType, setOperatorType] = useState('');
@@ -34,12 +31,16 @@ const NumbersProvider = (props: { children: object, }) => {
       value={{
         // handleSetDisplayValue,
         number,
-        // setNumber,
+        setNumber,
       }}
     >
       {props.children}
     </NumberContext.Provider>
   );
 };
+
+export const useNumberInfo = () => React.useContext(NumberContext);
+
+
 
 export default NumbersProvider;
