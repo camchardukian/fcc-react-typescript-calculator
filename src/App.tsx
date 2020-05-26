@@ -1,14 +1,14 @@
 import React from 'react';
 import './App.css';
 import Calculator from '../src/containers/Calculator';
-import NumbersProvider from '../src/providers/NumbersProvider';
+import { NumberContextProvider } from '../src/providers/NumbersProvider';
 
 function App() {
   return (
     <div className="App">
-      <NumbersProvider>
+      <NumberContextProvider>
         <Calculator />
-      </NumbersProvider>
+      </NumberContextProvider>
     </div>
   );
 }

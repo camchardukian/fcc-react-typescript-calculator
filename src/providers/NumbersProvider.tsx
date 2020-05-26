@@ -1,36 +1,57 @@
-import React, { useState } from 'react';
+import React, { createContext, Dispatch, SetStateAction, useState } from 'react';
 
-interface iContext {
+type Context = {
   number: number,
-  setNumber: any,
-  children?: React.ReactNode;
+  enteringNumber: number,
+  setContext: Dispatch<SetStateAction<Context>>
+  setNumber: Dispatch<SetStateAction<number>>,
+  setEnteringNumber: Dispatch<SetStateAction<number>>,
+  handleSetDisplayValue: Dispatch<SetStateAction<any>>
 }
-// Is the entire above interface useless?
 
-// @TODO try to finish implementing TypeScript with React Context and React Hooks
+type Props = {
+  children: React.ReactNode,
+}
 
-export const NumberContext = React.createContext<iContext | undefined>(undefined);
+const initialContext: Context = {
+  number: 0,
+  enteringNumber: 0,
+  setNumber: (): void => {
+  },
+  setEnteringNumber: (): void => {
+  },
+  setContext: (): void => {
+    throw new Error('setContext function must be overridden.');
+  },
+  handleSetDisplayValue: (): void => {
+
+  }
+}
+
+const NumberContext = createContext<Context>(initialContext);
 
 
-const NumbersProvider = (props: any) => {
-  const [number, setNumber]: [number, any] = useState<number>(333);
-  // not sure how to change any inside the above tuple without causing another error.
+const NumberContextProvider = ({ children }: Props): JSX.Element => {
+  const [contextState, setContext] = useState<Context>(initialContext);
+  const [number, setNumber] = useState(0);
+  const [enteringNumber, setEnteringNumber] = useState(0);
 
+  const handleSetDisplayValue = (num: number) => {
+    setEnteringNumber(Number(`${number}${num}`))
+    setNumber(Number(`${number}${num}`))
+
+  }
 
   return (
     <NumberContext.Provider
       value={{
-        number,
-        setNumber,
+        ...contextState, setContext, number, setNumber, enteringNumber, setEnteringNumber,
+        handleSetDisplayValue
       }}
     >
-      {props.children}
+      {children}
     </NumberContext.Provider>
   );
-};
+}
 
-export const useNumberInfo = () => React.useContext(NumberContext);
-//
-
-
-export default NumbersProvider;
+export { NumberContext, NumberContextProvider };

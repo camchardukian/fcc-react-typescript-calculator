@@ -6,7 +6,7 @@ import Display from '../Display';
 const Calculator = () => {
   return (
     <div className="calculator">
-      <Display value={3} />
+      <Display />
       <div className="flex-row">
         <NumberButton number={1} id="one" />
         <NumberButton number={2} id="two" />
