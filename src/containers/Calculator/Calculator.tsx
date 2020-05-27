@@ -2,11 +2,13 @@ import React from 'react';
 import './styles.scss';
 import NumberButton from '../NumberButton';
 import Display from '../Display';
+import ClearButton from '../ClearButton';
 
 const Calculator = () => {
   return (
     <div className="calculator">
       <Display />
+      <ClearButton />
       <div className="flex-row">
         <NumberButton number={1} id="one" />
         <NumberButton number={2} id="two" />
