@@ -10,16 +10,19 @@ type Context = {
   enteringNumber: number;
   storedNumber: number;
   operatorType: string;
+  decimalWillBeAdded: boolean;
   setContext: Dispatch<SetStateAction<Context>>;
   setNumber: Dispatch<SetStateAction<number>>;
   setEnteringNumber: Dispatch<SetStateAction<number>>;
   setStoredNumber: Dispatch<SetStateAction<number>>;
   setOperatorType: Dispatch<SetStateAction<string>>;
   handleSetDisplayValue: Dispatch<SetStateAction<any>>;
+  setDecimalWillBeAdded: Dispatch<SetStateAction<boolean>>;
   handleClearValues: () => void;
   handleSetStoredValue: () => void;
   handleChooseOperatorType: (opType: string) => void;
   handleCalculations: () => void;
+  handleAddDecimal: () => void;
 };
 
 type Props = {
@@ -30,6 +33,7 @@ const initialContext: Context = {
   number: 0,
   enteringNumber: 0,
   storedNumber: 0,
+  decimalWillBeAdded: false,
   operatorType: "",
   setNumber: (): void => {},
   setEnteringNumber: (): void => {},
@@ -40,9 +44,11 @@ const initialContext: Context = {
   handleSetDisplayValue: (): void => {},
   handleClearValues: (): void => {},
   setOperatorType: (): void => {},
+  setDecimalWillBeAdded: (): void => {},
   handleChooseOperatorType: (): void => {},
   handleSetStoredValue: (): void => {},
-  handleCalculations: (): void => {}
+  handleCalculations: (): void => {},
+  handleAddDecimal: (): void => {}
 };
 
 const NumberContext = createContext<Context>(initialContext);
@@ -53,20 +59,28 @@ const NumberContextProvider = ({ children }: Props): JSX.Element => {
   const [storedNumber, setStoredNumber] = useState(0);
   const [enteringNumber, setEnteringNumber] = useState(0);
   const [operatorType, setOperatorType] = useState("");
+  const [decimalWillBeAdded, setDecimalWillBeAdded] = useState(false);
 
   const handleSetDisplayValue = (num: number) => {
-    setEnteringNumber(Number(`${number}${num}`));
-    setNumber(Number(`${number}${num}`));
+    if (decimalWillBeAdded) {
+      setEnteringNumber(Number(`${number}.${num}`));
+      setNumber(Number(`${number}.${num}`));
+    } else {
+      setEnteringNumber(Number(`${number}${num}`));
+      setNumber(Number(`${number}${num}`));
+    }
   };
   const handleClearValues = () => {
     setNumber(0);
     setStoredNumber(0);
     setEnteringNumber(0);
+    setDecimalWillBeAdded(false);
   };
 
   const handleSetStoredValue = () => {
     setStoredNumber(number);
     setNumber(0);
+    setDecimalWillBeAdded(false);
   };
 
   const handleChooseOperatorType = (opType: string) => {
@@ -98,11 +112,14 @@ const NumberContextProvider = ({ children }: Props): JSX.Element => {
           return null;
       }
       result = Math.round(result * 10000000000) / 10000000000;
-      console.log("result", result, typeof result);
       setStoredNumber(result);
       setEnteringNumber(result);
       setNumber(0);
     }
+  };
+
+  const handleAddDecimal = () => {
+    setDecimalWillBeAdded(true);
   };
 
   return (
@@ -112,6 +129,7 @@ const NumberContextProvider = ({ children }: Props): JSX.Element => {
         setContext,
         number,
         setNumber,
+        decimalWillBeAdded,
         enteringNumber,
         setEnteringNumber,
         handleSetDisplayValue,
@@ -119,10 +137,12 @@ const NumberContextProvider = ({ children }: Props): JSX.Element => {
         setStoredNumber,
         operatorType,
         setOperatorType,
+        setDecimalWillBeAdded,
         handleClearValues,
         handleSetStoredValue,
         handleChooseOperatorType,
-        handleCalculations
+        handleCalculations,
+        handleAddDecimal
       }}
     >
       {children}

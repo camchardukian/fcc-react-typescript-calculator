@@ -5,6 +5,7 @@ import Display from "../Display";
 import ClearButton from "../ClearButton";
 import OperatorButton from "../OperatorButton";
 import EqualsButton from "../EqualsButton";
+import DecimalButton from "../DecimalButton";
 
 const Calculator = () => {
   return (
@@ -33,6 +34,7 @@ const Calculator = () => {
         <NumberButton number={0} id="zero" />
         <OperatorButton opType={"+"} id="add" />
         <EqualsButton />
+        <DecimalButton />
       </div>
     </div>
   );
