@@ -21,17 +21,17 @@ const Calculator = () => {
         <NumberButton number={4} id="four" />
         <NumberButton number={5} id="five" />
         <NumberButton number={6} id="six" />
-        <OperatorButton opType={"÷"} id="subtract" />
+        <OperatorButton opType={"-"} id="subtract" />
       </div>
       <div className="flex-row">
         <NumberButton number={7} id="seven" />
         <NumberButton number={8} id="eight" />
         <NumberButton number={9} id="nine" />
-        <OperatorButton opType={"÷"} id="multiply" />
+        <OperatorButton opType={"x"} id="multiply" />
       </div>
       <div className="flex-row">
         <NumberButton number={0} id="zero" />
-        <OperatorButton opType={"÷"} id="add" />
+        <OperatorButton opType={"+"} id="add" />
         <EqualsButton />
       </div>
     </div>
