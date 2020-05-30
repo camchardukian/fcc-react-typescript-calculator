@@ -7,17 +7,19 @@ import React, {
 
 type Context = {
   number: number;
-  enteringNumber: number;
+  enteringNumber: number | string;
   storedNumber: number;
   operatorType: string;
   decimalWillBeAdded: boolean;
+  numberHasDecimal: boolean;
   setContext: Dispatch<SetStateAction<Context>>;
   setNumber: Dispatch<SetStateAction<number>>;
-  setEnteringNumber: Dispatch<SetStateAction<number>>;
+  setEnteringNumber: Dispatch<SetStateAction<any>>;
   setStoredNumber: Dispatch<SetStateAction<number>>;
   setOperatorType: Dispatch<SetStateAction<string>>;
   handleSetDisplayValue: Dispatch<SetStateAction<any>>;
   setDecimalWillBeAdded: Dispatch<SetStateAction<boolean>>;
+  setNumberHasDecimal: Dispatch<SetStateAction<boolean>>;
   handleClearValues: () => void;
   handleSetStoredValue: () => void;
   handleChooseOperatorType: (opType: string) => void;
@@ -34,6 +36,7 @@ const initialContext: Context = {
   enteringNumber: 0,
   storedNumber: 0,
   decimalWillBeAdded: false,
+  numberHasDecimal: false,
   operatorType: "",
   setNumber: (): void => {},
   setEnteringNumber: (): void => {},
@@ -45,6 +48,7 @@ const initialContext: Context = {
   handleClearValues: (): void => {},
   setOperatorType: (): void => {},
   setDecimalWillBeAdded: (): void => {},
+  setNumberHasDecimal: (): void => {},
   handleChooseOperatorType: (): void => {},
   handleSetStoredValue: (): void => {},
   handleCalculations: (): void => {},
@@ -57,14 +61,30 @@ const NumberContextProvider = ({ children }: Props): JSX.Element => {
   const [contextState, setContext] = useState<Context>(initialContext);
   const [number, setNumber] = useState(0);
   const [storedNumber, setStoredNumber] = useState(0);
-  const [enteringNumber, setEnteringNumber] = useState(0);
+  const [enteringNumber, setEnteringNumber] = useState<string | number>(0);
   const [operatorType, setOperatorType] = useState("");
   const [decimalWillBeAdded, setDecimalWillBeAdded] = useState(false);
+  const [numberHasDecimal, setNumberHasDecimal] = useState(false);
 
   const handleSetDisplayValue = (num: number) => {
-    if (decimalWillBeAdded) {
-      setEnteringNumber(Number(`${number}.${num}`));
-      setNumber(Number(`${number}.${num}`));
+    if (
+      numberHasDecimal &&
+      decimalWillBeAdded &&
+      String(enteringNumber).length !== String(number).length
+    ) {
+      const example = Number(`${number}.0${num}`);
+      setNumber(example);
+      setEnteringNumber(example);
+      setDecimalWillBeAdded(false);
+    } else if (decimalWillBeAdded) {
+      if (num === 0) {
+        setEnteringNumber(`${number}.0`);
+        setNumberHasDecimal(true);
+      } else {
+        setNumber(Number(`${number}.${num}`));
+        setDecimalWillBeAdded(false);
+        setEnteringNumber(Number(`${number}.${num}`));
+      }
     } else {
       setEnteringNumber(Number(`${number}${num}`));
       setNumber(Number(`${number}${num}`));
@@ -92,7 +112,6 @@ const NumberContextProvider = ({ children }: Props): JSX.Element => {
   };
 
   const handleCalculations = () => {
-    console.log("hiii", "number", number, "storedNumber", storedNumber);
     if (number && storedNumber) {
       let result = 0;
       switch (operatorType) {
@@ -119,6 +138,8 @@ const NumberContextProvider = ({ children }: Props): JSX.Element => {
   };
 
   const handleAddDecimal = () => {
+    // @TODO check to see if the number already has a decimal by converting it
+    // to a string and using the indexOf method.
     setDecimalWillBeAdded(true);
   };
 
@@ -130,6 +151,7 @@ const NumberContextProvider = ({ children }: Props): JSX.Element => {
         number,
         setNumber,
         decimalWillBeAdded,
+        numberHasDecimal,
         enteringNumber,
         setEnteringNumber,
         handleSetDisplayValue,
@@ -138,6 +160,7 @@ const NumberContextProvider = ({ children }: Props): JSX.Element => {
         operatorType,
         setOperatorType,
         setDecimalWillBeAdded,
+        setNumberHasDecimal,
         handleClearValues,
         handleSetStoredValue,
         handleChooseOperatorType,
