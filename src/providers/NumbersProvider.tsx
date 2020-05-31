@@ -67,6 +67,16 @@ const NumberContextProvider = ({ children }: Props): JSX.Element => {
   const [numberHasDecimal, setNumberHasDecimal] = useState(false);
 
   const handleSetDisplayValue = (num: number) => {
+    console.log(
+      "number",
+      number,
+      "enteringNumber",
+      enteringNumber,
+      "decimalWillBeAdded",
+      decimalWillBeAdded,
+      "numberHasDecimal",
+      numberHasDecimal
+    );
     if (
       numberHasDecimal &&
       decimalWillBeAdded &&
@@ -82,12 +92,14 @@ const NumberContextProvider = ({ children }: Props): JSX.Element => {
         setNumberHasDecimal(true);
       } else {
         setNumber(Number(`${number}.${num}`));
+        setNumberHasDecimal(true);
         setDecimalWillBeAdded(false);
         setEnteringNumber(Number(`${number}.${num}`));
       }
     } else {
       setEnteringNumber(Number(`${number}${num}`));
       setNumber(Number(`${number}${num}`));
+      setDecimalWillBeAdded(false);
     }
   };
   const handleClearValues = () => {
@@ -95,6 +107,7 @@ const NumberContextProvider = ({ children }: Props): JSX.Element => {
     setStoredNumber(0);
     setEnteringNumber(0);
     setDecimalWillBeAdded(false);
+    setNumberHasDecimal(false);
   };
 
   const handleSetStoredValue = () => {
@@ -138,9 +151,10 @@ const NumberContextProvider = ({ children }: Props): JSX.Element => {
   };
 
   const handleAddDecimal = () => {
-    // @TODO check to see if the number already has a decimal by converting it
-    // to a string and using the indexOf method.
-    setDecimalWillBeAdded(true);
+    let enteringNumberAsString: string = String(enteringNumber);
+    if (enteringNumberAsString.indexOf(".") === -1) {
+      setDecimalWillBeAdded(true);
+    }
   };
 
   return (
