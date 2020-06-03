@@ -6,18 +6,18 @@ import React, {
 } from "react";
 
 type Context = {
-  number: number;
+  number: number | string;
   enteringNumber: number | string;
-  storedNumber: number;
+  storedNumber: number | string;
   operatorType: string;
   decimalWillBeAdded: boolean;
   numberHasDecimal: boolean;
   setContext: Dispatch<SetStateAction<Context>>;
-  setNumber: Dispatch<SetStateAction<number>>;
-  setEnteringNumber: Dispatch<SetStateAction<any>>;
-  setStoredNumber: Dispatch<SetStateAction<number>>;
+  setNumber: Dispatch<SetStateAction<number | string>>;
+  setEnteringNumber: Dispatch<SetStateAction<number | string>>;
+  setStoredNumber: Dispatch<SetStateAction<number | string>>;
   setOperatorType: Dispatch<SetStateAction<string>>;
-  handleSetDisplayValue: Dispatch<SetStateAction<any>>;
+  handleSetDisplayValue: (num: number) => void;
   setDecimalWillBeAdded: Dispatch<SetStateAction<boolean>>;
   setNumberHasDecimal: Dispatch<SetStateAction<boolean>>;
   handleClearValues: () => void;
@@ -59,61 +59,39 @@ const NumberContext = createContext<Context>(initialContext);
 
 const NumberContextProvider = ({ children }: Props): JSX.Element => {
   const [contextState, setContext] = useState<Context>(initialContext);
-  const [number, setNumber] = useState(0);
-  const [storedNumber, setStoredNumber] = useState(0);
+  const [number, setNumber] = useState<string | number>(0);
+  const [storedNumber, setStoredNumber] = useState<string | number>(0);
   const [enteringNumber, setEnteringNumber] = useState<string | number>(0);
   const [operatorType, setOperatorType] = useState("");
-  const [decimalWillBeAdded, setDecimalWillBeAdded] = useState(false);
-  const [numberHasDecimal, setNumberHasDecimal] = useState(false);
 
   const handleSetDisplayValue = (num: number) => {
-    console.log(
-      "number",
-      number,
-      "enteringNumber",
-      enteringNumber,
-      "decimalWillBeAdded",
-      decimalWillBeAdded,
-      "numberHasDecimal",
-      numberHasDecimal
-    );
-    if (
-      numberHasDecimal &&
-      decimalWillBeAdded &&
-      String(enteringNumber).length !== String(number).length
-    ) {
-      const example = Number(`${number}.0${num}`);
-      setNumber(example);
-      setEnteringNumber(example);
-      setDecimalWillBeAdded(false);
-    } else if (decimalWillBeAdded) {
-      if (num === 0) {
-        setEnteringNumber(`${number}.0`);
-        setNumberHasDecimal(true);
+    if (String(number).length < 12) {
+      if (!number) {
+        setNumber(num);
+        setEnteringNumber(num);
       } else {
-        setNumber(Number(`${number}.${num}`));
-        setNumberHasDecimal(true);
-        setDecimalWillBeAdded(false);
-        setEnteringNumber(Number(`${number}.${num}`));
+        if (num === 0) {
+          setNumber("".concat("" + number + num));
+          setEnteringNumber("".concat("" + number + num));
+        } else {
+          setNumber(Number("" + number + num));
+          setEnteringNumber(Number("" + number + num));
+        }
       }
     } else {
-      setEnteringNumber(Number(`${number}${num}`));
-      setNumber(Number(`${number}${num}`));
-      setDecimalWillBeAdded(false);
+      alert("maximum character limit exceeded");
     }
   };
+
   const handleClearValues = () => {
     setNumber(0);
     setStoredNumber(0);
     setEnteringNumber(0);
-    setDecimalWillBeAdded(false);
-    setNumberHasDecimal(false);
   };
 
   const handleSetStoredValue = () => {
     setStoredNumber(number);
     setNumber(0);
-    setDecimalWillBeAdded(false);
   };
 
   const handleChooseOperatorType = (opType: string) => {
@@ -151,9 +129,19 @@ const NumberContextProvider = ({ children }: Props): JSX.Element => {
   };
 
   const handleAddDecimal = () => {
-    let enteringNumberAsString: string = String(enteringNumber);
-    if (enteringNumberAsString.indexOf(".") === -1) {
-      setDecimalWillBeAdded(true);
+    let copyEnteringNumber;
+    String(enteringNumber).indexOf(".") > -1
+      ? (copyEnteringNumber = enteringNumber)
+      : (copyEnteringNumber = enteringNumber + ".");
+    if (copyEnteringNumber !== enteringNumber && !storedNumber) {
+      setEnteringNumber(copyEnteringNumber);
+      setNumber(copyEnteringNumber);
+    } else if (String(number).indexOf(".") === -1 && !storedNumber) {
+      setNumber("0.");
+      setEnteringNumber("0.");
+    } else if (String(number).indexOf(".") === -1) {
+      setNumber(number + ".");
+      setEnteringNumber(enteringNumber + ".");
     }
   };
 
@@ -164,8 +152,6 @@ const NumberContextProvider = ({ children }: Props): JSX.Element => {
         setContext,
         number,
         setNumber,
-        decimalWillBeAdded,
-        numberHasDecimal,
         enteringNumber,
         setEnteringNumber,
         handleSetDisplayValue,
@@ -173,8 +159,6 @@ const NumberContextProvider = ({ children }: Props): JSX.Element => {
         setStoredNumber,
         operatorType,
         setOperatorType,
-        setDecimalWillBeAdded,
-        setNumberHasDecimal,
         handleClearValues,
         handleSetStoredValue,
         handleChooseOperatorType,
