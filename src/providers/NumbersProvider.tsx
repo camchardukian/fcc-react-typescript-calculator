@@ -65,6 +65,7 @@ const NumberContextProvider = ({ children }: Props): JSX.Element => {
   const [operatorType, setOperatorType] = useState("");
   const [decimalWillBeAdded, setDecimalWillBeAdded] = useState(false);
   const [numberHasDecimal, setNumberHasDecimal] = useState(false);
+  const [zeroesToConcat, setZeroesToConcat] = useState("0");
 
   const handleSetDisplayValue = (num: number) => {
     console.log(
@@ -80,26 +81,47 @@ const NumberContextProvider = ({ children }: Props): JSX.Element => {
     if (
       numberHasDecimal &&
       decimalWillBeAdded &&
-      String(enteringNumber).length !== String(number).length
+      String(enteringNumber).length !== String(number).length &&
+      num !== 0
     ) {
       const example = Number(`${number}.0${num}`);
       setNumber(example);
       setEnteringNumber(example);
       setDecimalWillBeAdded(false);
+      console.log("zerooo");
     } else if (decimalWillBeAdded) {
       if (num === 0) {
         setEnteringNumber(`${number}.0`);
         setNumberHasDecimal(true);
+        console.log("oneeee");
       } else {
         setNumber(Number(`${number}.${num}`));
         setNumberHasDecimal(true);
         setDecimalWillBeAdded(false);
         setEnteringNumber(Number(`${number}.${num}`));
+        console.log("twoooo");
       }
     } else {
-      setEnteringNumber(Number(`${number}${num}`));
-      setNumber(Number(`${number}${num}`));
-      setDecimalWillBeAdded(false);
+      // working here today
+      if (num === 0) {
+        setZeroesToConcat(zeroesToConcat + "0");
+        console.log("ztc", zeroesToConcat);
+        setEnteringNumber(`${number}${zeroesToConcat}`);
+      } else {
+        if (zeroesToConcat.length > 1) {
+          const stringValue = `${number}${zeroesToConcat}${num}`;
+          const ABC = parseFloat(stringValue);
+          console.log("fff", ABC, typeof ABC); // stringValue === "9.70004"
+          setNumber(ABC); // number === 9.74 // current 9.74 expected 9.70004
+          console.log("heyyyyy", number);
+          setEnteringNumber(number);
+        } else {
+          setEnteringNumber(Number(`${number}${num}`));
+          setNumber(Number(`${number}${num}`));
+          setDecimalWillBeAdded(false);
+        }
+        console.log("threee");
+      }
     }
   };
   const handleClearValues = () => {
@@ -108,23 +130,29 @@ const NumberContextProvider = ({ children }: Props): JSX.Element => {
     setEnteringNumber(0);
     setDecimalWillBeAdded(false);
     setNumberHasDecimal(false);
+    console.log("fourrr");
   };
 
   const handleSetStoredValue = () => {
     setStoredNumber(number);
     setNumber(0);
     setDecimalWillBeAdded(false);
+    console.log("fiveee");
   };
 
   const handleChooseOperatorType = (opType: string) => {
     setOperatorType(opType);
+    console.log("sixxx");
 
     if (number) {
       handleSetStoredValue();
+      console.log("sevenn");
     }
   };
 
   const handleCalculations = () => {
+    console.log("eighttt");
+
     if (number && storedNumber) {
       let result = 0;
       switch (operatorType) {
@@ -151,8 +179,12 @@ const NumberContextProvider = ({ children }: Props): JSX.Element => {
   };
 
   const handleAddDecimal = () => {
+    console.log("nineee");
+
     let enteringNumberAsString: string = String(enteringNumber);
     if (enteringNumberAsString.indexOf(".") === -1) {
+      console.log("tennn");
+
       setDecimalWillBeAdded(true);
     }
   };
