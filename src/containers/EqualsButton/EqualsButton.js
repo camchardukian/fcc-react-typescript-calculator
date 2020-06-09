@@ -3,13 +3,13 @@ import { NumberContext } from "../../providers/NumbersProvider";
 import "./styles.scss";
 
 const EqualsButton = () => {
-  const { handleCalculations } = useContext(NumberContext);
+  const { handleSetIsCalculating } = useContext(NumberContext);
   return (
     <button
       type="button"
       className="calculator-arithmetic-operator"
       id="equals"
-      onClick={() => handleCalculations()}
+      onClick={() => handleSetIsCalculating(true)}
     >
       <span>=</span>
     </button>

@@ -16,7 +16,7 @@ const Calculator = () => {
         <NumberButton number={1} id="one" />
         <NumberButton number={2} id="two" />
         <NumberButton number={3} id="three" />
-        <OperatorButton opType={"÷"} id="divide" />
+        <OperatorButton opType={"/"} id="divide" />
       </div>
       <div className="flex-row">
         <NumberButton number={4} id="four" />
@@ -28,7 +28,7 @@ const Calculator = () => {
         <NumberButton number={7} id="seven" />
         <NumberButton number={8} id="eight" />
         <NumberButton number={9} id="nine" />
-        <OperatorButton opType={"x"} id="multiply" />
+        <OperatorButton opType={"*"} id="multiply" />
       </div>
       <div className="flex-row">
         <NumberButton number={0} id="zero" />
