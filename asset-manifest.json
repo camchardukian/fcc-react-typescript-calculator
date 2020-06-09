@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/fcc-react-typescript-calculator/static/css/main.d2b42b9f.chunk.css",
+    "main.js": "/fcc-react-typescript-calculator/static/js/main.e00f19ca.chunk.js",
+    "main.js.map": "/fcc-react-typescript-calculator/static/js/main.e00f19ca.chunk.js.map",
+    "runtime-main.js": "/fcc-react-typescript-calculator/static/js/runtime-main.0062d5ea.js",
+    "runtime-main.js.map": "/fcc-react-typescript-calculator/static/js/runtime-main.0062d5ea.js.map",
+    "static/js/2.8c909355.chunk.js": "/fcc-react-typescript-calculator/static/js/2.8c909355.chunk.js",
+    "static/js/2.8c909355.chunk.js.map": "/fcc-react-typescript-calculator/static/js/2.8c909355.chunk.js.map",
+    "index.html": "/fcc-react-typescript-calculator/index.html",
+    "precache-manifest.d937c9ed01c839dc7e3c73a1a1fef64a.js": "/fcc-react-typescript-calculator/precache-manifest.d937c9ed01c839dc7e3c73a1a1fef64a.js",
+    "service-worker.js": "/fcc-react-typescript-calculator/service-worker.js",
+    "static/css/main.d2b42b9f.chunk.css.map": "/fcc-react-typescript-calculator/static/css/main.d2b42b9f.chunk.css.map",
+    "static/js/2.8c909355.chunk.js.LICENSE.txt": "/fcc-react-typescript-calculator/static/js/2.8c909355.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.0062d5ea.js",
+    "static/js/2.8c909355.chunk.js",
+    "static/css/main.d2b42b9f.chunk.css",
+    "static/js/main.e00f19ca.chunk.js"
+  ]
+}
