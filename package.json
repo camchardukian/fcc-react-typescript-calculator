@@ -1,4 +1,5 @@
 {
+  "homepage": "http://camchardukian.github.io/fcc-react-typescript-calculator",
   "name": "fcc-react-typescript-calculator",
   "version": "0.1.0",
   "private": true,
@@ -8,6 +9,7 @@
     "@testing-library/user-event": "^7.1.2",
     "@types/jest": "^24.0.0",
     "@types/mathjs": "^6.0.5",
+    "gh-pages": "^3.0.0",
     "mathjs": "^7.0.1",
     "node-sass": "^4.14.1",
     "react": "^16.13.1",
@@ -16,6 +18,8 @@
     "typescript": "~3.7.2"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
