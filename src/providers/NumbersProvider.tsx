@@ -14,7 +14,6 @@ type Context = {
   operatorType: string;
   decimalWillBeAdded: boolean;
   numberHasDecimal: boolean;
-  isCalculating: boolean;
   setContext: Dispatch<SetStateAction<Context>>;
   setNumber: Dispatch<SetStateAction<number | string>>;
   setEnteringNumber: Dispatch<SetStateAction<number | string>>;
@@ -29,7 +28,6 @@ type Context = {
   handleChooseOperatorType: (opType: string) => void;
   handleCalculations: () => void;
   handleAddDecimal: () => void;
-  handleSetIsCalculating: (status: boolean) => void;
 };
 
 type Props = {
@@ -42,7 +40,6 @@ const initialContext: Context = {
   storedNumber: 0,
   decimalWillBeAdded: false,
   numberHasDecimal: false,
-  isCalculating: true,
   operatorType: "",
   setNumber: (): void => {},
   setEnteringNumber: (): void => {},
@@ -59,8 +56,7 @@ const initialContext: Context = {
   handleChooseOperatorType: (): void => {},
   handleSetStoredValue: (): void => {},
   handleCalculations: (): void => {},
-  handleAddDecimal: (): void => {},
-  handleSetIsCalculating: (): void => {}
+  handleAddDecimal: (): void => {}
 };
 
 const NumberContext = createContext<Context>(initialContext);
@@ -71,7 +67,6 @@ const NumberContextProvider = ({ children }: Props): JSX.Element => {
   const [storedNumber, setStoredNumber] = useState<string | number>(0);
   const [enteringNumber, setEnteringNumber] = useState<string | number>(0);
   const [operatorType, setOperatorType] = useState<string>("");
-  const [isCalculating, setIsCalculating] = useState<boolean>(false);
 
   const handleSetDisplayValue = (value: number | string) => {
     if (String(number).length < 15) {
@@ -92,10 +87,6 @@ const NumberContextProvider = ({ children }: Props): JSX.Element => {
     }
   };
 
-  const handleSetIsCalculating = (status: boolean) => {
-    setIsCalculating(status);
-  };
-
   const handleClearValues = () => {
     setNumber(0);
     setStoredNumber(0);
@@ -108,15 +99,71 @@ const NumberContextProvider = ({ children }: Props): JSX.Element => {
   };
 
   const handleCalculations = () => {
-    if (enteringNumber && isCalculating) {
-      let result: any = simplify(String(enteringNumber));
-      result = result.evaluate();
-      result = Math.round(result * 10000000000) / 10000000000;
-      setStoredNumber(result);
-      setEnteringNumber(result);
-      setNumber(result);
+    const enteringNumberWithoutMultipleOperators = handleRemoveMultipleConsecutiveOperators();
+    let result: any = simplify(String(enteringNumberWithoutMultipleOperators));
+    result = result.evaluate();
+    result = Math.round(result * 10000000000) / 10000000000;
+    setStoredNumber(result);
+    setEnteringNumber(result);
+    setNumber(result);
+  };
+
+  const handleRemoveMultipleConsecutiveOperators = () => {
+    const stringifiedEnteringNumber = String(enteringNumber);
+    let processedValueToReturn: string[] | string = [];
+    const regExpTestingForDigits = new RegExp(/\d|\./);
+    // let numberOfConsecutiveDigits = 0;
+    let numberOfConsecutiveOperators = 0;
+
+    for (let i = stringifiedEnteringNumber.length - 1; i >= 0; i -= 1) {
+      console.log(stringifiedEnteringNumber[i], i);
+      if (regExpTestingForDigits.test(stringifiedEnteringNumber[i])) {
+        console.log(
+          "rrr",
+          i,
+          stringifiedEnteringNumber[i],
+          regExpTestingForDigits.test(stringifiedEnteringNumber[i])
+        );
+        processedValueToReturn.unshift(stringifiedEnteringNumber[i]);
+        // numberOfConsecutiveDigits += 1;
+        numberOfConsecutiveOperators = 0;
+      }
+      if (stringifiedEnteringNumber[i].match(/[+/*]/)) {
+        numberOfConsecutiveOperators += 1;
+      }
+      if (
+        numberOfConsecutiveOperators >= 1 ||
+        stringifiedEnteringNumber[i] === "-"
+      ) {
+        console.log(
+          "attention",
+          "stringifiedEnteringNumber[i]",
+          stringifiedEnteringNumber[i],
+          "processedValueToReturn",
+          processedValueToReturn
+        );
+        console.log("tttt", processedValueToReturn[0]);
+        processedValueToReturn.unshift(stringifiedEnteringNumber[i]);
+        console.log("helpppp", processedValueToReturn);
+        if (
+          processedValueToReturn[1].match(/[+/*]/) &&
+          processedValueToReturn[0].match(/[+/*]/)
+        ) {
+          console.log("hereee", typeof processedValueToReturn);
+          if (Array.isArray(processedValueToReturn)) {
+            console.log(
+              "processedValueToReturn00000",
+              processedValueToReturn[0],
+              "processedValueToReturn1111",
+              processedValueToReturn[1]
+            );
+            processedValueToReturn.splice(0, 1);
+          }
+        }
+      }
     }
-    handleSetIsCalculating(false);
+    console.log("finishsss", processedValueToReturn.reverse().join(""));
+    return processedValueToReturn.reverse().join("");
   };
 
   const handleCheckToAvoidAddingDoubleDecimals = () => {
@@ -175,7 +222,6 @@ const NumberContextProvider = ({ children }: Props): JSX.Element => {
         setOperatorType,
         handleClearValues,
         handleSetStoredValue,
-        handleSetIsCalculating,
         handleCalculations,
         handleAddDecimal
       }}
