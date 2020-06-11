@@ -112,58 +112,15 @@ const NumberContextProvider = ({ children }: Props): JSX.Element => {
     const stringifiedEnteringNumber = String(enteringNumber);
     let processedValueToReturn: string[] | string = [];
     const regExpTestingForDigits = new RegExp(/\d|\./);
-    // let numberOfConsecutiveDigits = 0;
-    let numberOfConsecutiveOperators = 0;
-
     for (let i = stringifiedEnteringNumber.length - 1; i >= 0; i -= 1) {
-      console.log(stringifiedEnteringNumber[i], i);
       if (regExpTestingForDigits.test(stringifiedEnteringNumber[i])) {
-        console.log(
-          "rrr",
-          i,
-          stringifiedEnteringNumber[i],
-          regExpTestingForDigits.test(stringifiedEnteringNumber[i])
-        );
         processedValueToReturn.unshift(stringifiedEnteringNumber[i]);
-        // numberOfConsecutiveDigits += 1;
-        numberOfConsecutiveOperators = 0;
-      }
-      if (stringifiedEnteringNumber[i].match(/[+/*]/)) {
-        numberOfConsecutiveOperators += 1;
-      }
-      if (
-        numberOfConsecutiveOperators >= 1 ||
-        stringifiedEnteringNumber[i] === "-"
-      ) {
-        console.log(
-          "attention",
-          "stringifiedEnteringNumber[i]",
-          stringifiedEnteringNumber[i],
-          "processedValueToReturn",
-          processedValueToReturn
-        );
-        console.log("tttt", processedValueToReturn[0]);
+      } else if (processedValueToReturn[0].match(/[+/*]/)) {
+      } else {
         processedValueToReturn.unshift(stringifiedEnteringNumber[i]);
-        console.log("helpppp", processedValueToReturn);
-        if (
-          processedValueToReturn[1].match(/[+/*]/) &&
-          processedValueToReturn[0].match(/[+/*]/)
-        ) {
-          console.log("hereee", typeof processedValueToReturn);
-          if (Array.isArray(processedValueToReturn)) {
-            console.log(
-              "processedValueToReturn00000",
-              processedValueToReturn[0],
-              "processedValueToReturn1111",
-              processedValueToReturn[1]
-            );
-            processedValueToReturn.splice(0, 1);
-          }
-        }
       }
     }
-    console.log("finishsss", processedValueToReturn.reverse().join(""));
-    return processedValueToReturn.reverse().join("");
+    return processedValueToReturn.join("");
   };
 
   const handleCheckToAvoidAddingDoubleDecimals = () => {
